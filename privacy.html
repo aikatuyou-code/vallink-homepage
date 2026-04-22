@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>プライバシーポリシー | Vallink バルリンク</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:    #ffffff;
+      --deep:     #f0f4f8;
+      --surface:  #f8fafc;
+      --border:   #e2e8f0;
+      --gold:     #2d6ae0;
+      --gold-lt:  #93b4f5;
+      --gold-dk:  #1a2744;
+      --white:    #1a1a2e;
+      --muted:    #64748b;
+      --radius:   4px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+    ::selection { background: var(--gold); color: #ffffff; }
+
+    h1, h2, h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      letter-spacing: .02em;
+      line-height: 1.2;
+    }
+
+    .label {
+      font-family: 'Jost', sans-serif;
+      font-size: .65rem;
+      font-weight: 500;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .container { max-width: 800px; margin: 0 auto; padding: 0 clamp(1.5rem, 5vw, 3rem); }
+
+    /* ─── ヘッダー ─── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 900;
+      background: rgba(255,255,255,.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 1px 20px rgba(26,39,68,.06);
+      padding: 1.1rem 0;
+    }
+    header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1100px;
+    }
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      letter-spacing: .12em;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .logo span { color: var(--gold); }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .7rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .3s;
+    }
+    .back-link:hover { color: var(--gold-dk); }
+    .back-link svg { transition: transform .3s; }
+    .back-link:hover svg { transform: translateX(-3px); }
+
+    /* ─── ヒーロー（ページタイトル） ─── */
+    .page-hero {
+      background: var(--deep);
+      border-bottom: 1px solid var(--border);
+      padding: 4rem 0 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 80% at 100% 50%, rgba(45,106,224,.06) 0%, transparent 70%);
+    }
+    .page-hero .container { position: relative; z-index: 1; }
+    .page-hero .label { display: block; margin-bottom: 1rem; }
+    .page-hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      color: var(--gold-dk);
+      margin-bottom: .75rem;
+    }
+    .page-hero p {
+      font-size: .88rem;
+      color: var(--muted);
+    }
+
+    /* ─── 本文エリア ─── */
+    .policy-body {
+      padding: 4rem 0 6rem;
+    }
+
+    /* 最終更新日 */
+    .policy-date {
+      font-size: .75rem;
+      color: var(--muted);
+      letter-spacing: .06em;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+
+    /* イントロ文 */
+    .policy-intro {
+      font-size: .95rem;
+      color: var(--muted);
+      margin-bottom: 3rem;
+      padding: 1.5rem 2rem;
+      background: var(--surface);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      line-height: 1.85;
+    }
+
+    /* 各セクション */
+    .policy-section {
+      margin-bottom: 3rem;
+    }
+    .policy-section:last-of-type { margin-bottom: 0; }
+
+    .section-num {
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      margin-bottom: 1rem;
+    }
+    .section-num-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--gold-dk);
+      color: #ffffff;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: .9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-num-label {
+      font-size: .62rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    .policy-section h2 {
+      font-size: 1.4rem;
+      color: var(--gold-dk);
+      margin-bottom: 1rem;
+    }
+
+    .policy-section p {
+      font-size: .9rem;
+      color: var(--muted);
+      line-height: 1.85;
+    }
+
+    /* 項目リスト */
+    .policy-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: .6rem;
+      margin-top: .75rem;
+    }
+    .policy-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: .75rem;
+      font-size: .9rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .policy-list li::before {
+      content: '';
+      display: block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+      margin-top: .55rem;
+    }
+
+    /* セクション間の区切り */
+    .policy-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2.5rem 0;
+    }
+
+    /* お問い合わせカード */
+    .contact-card {
+      margin-top: 3rem;
+      padding: 2rem 2.5rem;
+      background: var(--gold-dk);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .contact-card-text h3 {
+      font-size: 1.2rem;
+      color: #ffffff;
+      margin-bottom: .4rem;
+    }
+    .contact-card-text p {
+      font-size: .82rem;
+      color: rgba(255,255,255,.65);
+    }
+    .contact-card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .7rem 1.6rem;
+      background: linear-gradient(135deg, #2d6ae0, #93b4f5);
+      color: #ffffff;
+      font-family: 'Jost', sans-serif;
+      font-size: .75rem;
+      font-weight: 500;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: var(--radius);
+      transition: opacity .3s, transform .3s;
+      white-space: nowrap;
+    }
+    .contact-card-link:hover { opacity: .88; transform: translateY(-1px); }
+
+    /* ─── フッター ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+    }
+    footer .container {
+      max-width: 1100px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      letter-spacing: .1em;
+      color: var(--white);
+    }
+    .footer-logo span { color: var(--gold); }
+    .footer-copy {
+      font-size: .65rem;
+      color: #94a3b8;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 600px) {
+      .contact-card { flex-direction: column; align-items: flex-start; }
+      footer .container { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── ヘッダー ─── -->
+  <header>
+    <div class="container">
+      <a href="index.html" class="logo">Val<span>link</span></a>
+      <a href="index.html" class="back-link">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M9 1L3 7l6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        トップへ戻る
+      </a>
+    </div>
+  </header>
+
+  <!-- ─── ページタイトル ─── -->
+  <div class="page-hero">
+    <div class="container">
+      <span class="label">Privacy Policy</span>
+      <h1>プライバシーポリシー</h1>
+      <p>個人情報の取り扱いに関する方針</p>
+    </div>
+  </div>
+
+  <!-- ─── 本文 ─── -->
+  <main class="policy-body">
+    <div class="container">
+
+      <p class="policy-date">最終更新日：2024年4月</p>
+
+      <p class="policy-intro">
+        バルリンク（以下「当社」）は、お客様の個人情報の保護を重要な責務と考え、
+        以下の方針に基づき適切に取り扱います。
+        本ポリシーは、当社が提供するサービスをご利用いただく際に適用されます。
+      </p>
+
+      <!-- 第1条 -->
+      <div class="policy-section">
+        <div class="section-num">
+          <div class="section-num-badge">1</div>
+          <span class="section-num-label">Article</span>
+        </div>
+        <h2>収集する個人情報</h2>
+        <p>当社は、サービスのご提供にあたり、以下の情報をお客様からお預かりします。</p>
+        <ul class="policy-list">
+          <li>氏名</li>
+          <li>会社名・屋号</li>
+          <li>メールアドレス</li>
+          <li>電話番号</li>
+        </ul>
+      </div>
+
+      <hr class="policy-divider">
+
+      <!-- 第2条 -->
+      <div class="policy-section">
+        <div class="section-num">
+          <div class="section-num-badge">2</div>
+          <span class="section-num-label">Article</span>
+        </div>
+        <h2>利用目的</h2>
+        <p>お預かりした個人情報は、以下の目的にのみ使用します。目的外での利用は一切行いません。</p>
+        <ul class="policy-list">
+          <li>お問い合わせ・ご相談への返答・連絡</li>
+          <li>LP制作業務の遂行および納品に関わるやり取り</li>
+        </ul>
+      </div>
+
+      <hr class="policy-divider">
+
+      <!-- 第3条 -->
+      <div class="policy-section">
+        <div class="section-num">
+          <div class="section-num-badge">3</div>
+          <span class="section-num-label">Article</span>
+        </div>
+        <h2>第三者への提供</h2>
+        <p>
+          当社は、お客様の個人情報を第三者へ提供・開示・売却することは一切ありません。
+          ただし、法令に基づき開示が義務付けられた場合はこの限りではありません。
+        </p>
+      </div>
+
+      <hr class="policy-divider">
+
+      <!-- 第4条 -->
+      <div class="policy-section">
+        <div class="section-num">
+          <div class="section-num-badge">4</div>
+          <span class="section-num-label">Article</span>
+        </div>
+        <h2>個人情報の管理</h2>
+        <p>
+          当社は、お客様からお預かりした個人情報を適切に管理し、
+          不正アクセス・紛失・改ざん・漏洩の防止に努めます。
+          また、利用目的の達成後は、速やかに個人情報を削除します。
+        </p>
+      </div>
+
+      <hr class="policy-divider">
+
+      <!-- 第5条 -->
+      <div class="policy-section">
+        <div class="section-num">
+          <div class="section-num-badge">5</div>
+          <span class="section-num-label">Article</span>
+        </div>
+        <h2>プライバシーポリシーの変更</h2>
+        <p>
+          当社は、法令の改正やサービス内容の変更に伴い、
+          本ポリシーを予告なく改定することがあります。
+          改定後のポリシーは、本ページへの掲載をもって効力を生じるものとします。
+        </p>
+      </div>
+
+      <!-- お問い合わせカード -->
+      <div class="contact-card">
+        <div class="contact-card-text">
+          <h3>個人情報に関するお問い合わせ</h3>
+          <p>開示・訂正・削除のご依頼はメールにてお受けします。</p>
+        </div>
+        <a href="mailto:vallink.official@gmail.com" class="contact-card-link">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M1 3h12v8H1zM1 3l6 5 6-5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          vallink.official@gmail.com
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ─── フッター ─── -->
+  <footer>
+    <div class="container">
+      <div class="footer-logo">Val<span>link</span></div>
+      <div class="footer-copy">&copy; 2024 Vallink. All rights reserved.</div>
+    </div>
+  </footer>
+
+</body>
+</html>
