@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お問い合わせ | Vallink バルリンク</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:    #ffffff;
+      --deep:     #f0f4f8;
+      --surface:  #f8fafc;
+      --border:   #e2e8f0;
+      --gold:     #2d6ae0;
+      --gold-lt:  #93b4f5;
+      --gold-dk:  #1a2744;
+      --white:    #1a1a2e;
+      --muted:    #64748b;
+      --radius:   4px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+      pointer-events: none;
+      z-index: 1000;
+      opacity: .2;
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--gold-dk); border-radius: 2px; }
+    ::selection { background: var(--gold); color: var(--black); }
+
+    h1, h2, h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      letter-spacing: .02em;
+      line-height: 1.15;
+    }
+
+    .label {
+      font-family: 'Jost', sans-serif;
+      font-size: .65rem;
+      font-weight: 500;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 clamp(1.5rem, 5vw, 4rem); }
+
+    .gold-line {
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      margin: 1.25rem 0;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 900;
+      padding: 1.4rem 0;
+      transition: background .4s, padding .4s;
+    }
+    header.scrolled {
+      background: rgba(255,255,255,.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 1px 20px rgba(26,39,68,.06);
+    }
+    header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      letter-spacing: .12em;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .logo span { color: var(--gold); }
+
+    nav { display: flex; align-items: center; gap: 2.5rem; }
+    nav a {
+      font-size: .7rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      position: relative;
+      transition: color .3s;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width .3s;
+    }
+    nav a:hover { color: var(--white); }
+    nav a:hover::after { width: 100%; }
+
+    .nav-cta {
+      padding: .55rem 1.4rem;
+      border: 1px solid var(--gold-dk);
+      color: var(--gold) !important;
+      border-radius: var(--radius);
+      transition: background .3s, border-color .3s !important;
+    }
+    .nav-cta::after { display: none !important; }
+    .nav-cta:hover { background: var(--gold-dk); color: var(--white) !important; }
+    .nav-cta.active { background: var(--gold-dk); color: #fff !important; }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 1px;
+      background: var(--white);
+      transition: transform .3s, opacity .3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26,39,68,.98);
+      backdrop-filter: blur(20px);
+      z-index: 850;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 300;
+      color: #f0f4f8;
+      text-decoration: none;
+      letter-spacing: .06em;
+      transition: color .3s;
+    }
+    .mobile-nav a:hover { color: var(--gold-lt); }
+
+    /* ─── PAGE HERO ─── */
+    .page-hero {
+      padding: 10rem 0 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 80% at 80% 50%, rgba(45,106,224,.06) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 10% 80%, rgba(26,39,68,.04) 0%, transparent 60%);
+    }
+    .page-hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(45,106,224,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(45,106,224,.04) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+    }
+    .page-hero-content { position: relative; z-index: 2; }
+    .page-hero h1 {
+      font-size: clamp(2.4rem, 5vw, 4.5rem);
+      margin: .75rem 0 1rem;
+    }
+    .page-hero p {
+      color: var(--muted);
+      font-size: .95rem;
+      max-width: 480px;
+    }
+
+    /* ─── FORM SECTION ─── */
+    .form-section {
+      padding: 0 0 8rem;
+    }
+
+    .form-layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    /* ─── SIDEBAR INFO ─── */
+    .form-sidebar {
+      position: sticky;
+      top: 6rem;
+    }
+    .sidebar-block {
+      border: 1px solid var(--border);
+      padding: 2rem;
+      background: var(--deep);
+      margin-bottom: 1.5rem;
+    }
+    .sidebar-block:last-child { margin-bottom: 0; }
+    .sidebar-block h3 {
+      font-size: 1rem;
+      margin-bottom: .75rem;
+    }
+    .sidebar-block p {
+      font-size: .82rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+    .sidebar-contact-item {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      font-size: .82rem;
+      color: var(--muted);
+      margin-top: .75rem;
+    }
+    .sidebar-contact-item a {
+      color: var(--gold);
+      text-decoration: none;
+      transition: opacity .2s;
+    }
+    .sidebar-contact-item a:hover { opacity: .75; }
+    .sidebar-icon {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    /* ─── FORM CARD ─── */
+    .form-card {
+      background: var(--deep);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .form-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold-dk), var(--gold), var(--gold-lt));
+    }
+    .form-card-inner { padding: 3rem; }
+
+    /* ─── SECTION DIVIDER ─── */
+    .form-section-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 2.5rem 0 1.5rem;
+    }
+    .form-section-title:first-of-type { margin-top: 0; }
+    .form-section-title h3 {
+      font-size: .62rem;
+      font-weight: 500;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      white-space: nowrap;
+    }
+    .form-section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ─── SERVICE CHECKBOXES ─── */
+    .service-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .75rem;
+    }
+    .service-check-label {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      padding: 1rem 1.25rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      cursor: pointer;
+      transition: border-color .25s, background .25s;
+      user-select: none;
+    }
+    .service-check-label:hover { border-color: var(--gold); background: #eef3fb; }
+    .service-check-label input[type="checkbox"] { display: none; }
+    .check-box {
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: border-color .25s, background .25s;
+    }
+    .check-box svg { opacity: 0; transition: opacity .2s; }
+    .service-check-label input:checked ~ .check-box {
+      background: var(--gold);
+      border-color: var(--gold);
+    }
+    .service-check-label input:checked ~ .check-box svg { opacity: 1; }
+    .service-check-label input:checked ~ .check-text { color: var(--gold-dk); font-weight: 500; }
+    .service-check-label.selected { border-color: var(--gold); background: #eef3fb; }
+
+    .check-text {
+      font-size: .85rem;
+      color: var(--muted);
+      transition: color .25s;
+    }
+
+    /* ─── CONDITIONAL BLOCKS ─── */
+    .conditional-block {
+      display: none;
+      margin-top: 1px;
+    }
+    .conditional-block.visible { display: block; }
+
+    .conditional-inner {
+      border: 1px solid rgba(45,106,224,.2);
+      border-top: 2px solid var(--gold);
+      background: rgba(45,106,224,.03);
+      padding: 2rem;
+      margin-top: 1.25rem;
+    }
+    .conditional-header {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: 1.5rem;
+    }
+    .conditional-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--gold-dk), var(--gold));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .conditional-header h4 {
+      font-size: .68rem;
+      font-weight: 500;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    /* ─── FORM FIELDS ─── */
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .field-row.full { grid-template-columns: 1fr; }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+      margin-bottom: 1rem;
+    }
+    .field:last-child { margin-bottom: 0; }
+
+    .field label {
+      font-size: .68rem;
+      font-weight: 500;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .field label .req {
+      color: var(--gold);
+      margin-left: .25rem;
+    }
+    .field label .opt {
+      color: #b0bec5;
+      font-size: .6rem;
+      font-weight: 400;
+      letter-spacing: .1em;
+      margin-left: .3rem;
+      text-transform: none;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      padding: .75rem 1rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--white);
+      font-family: 'Jost', sans-serif;
+      font-size: .88rem;
+      font-weight: 300;
+      border-radius: var(--radius);
+      outline: none;
+      transition: border-color .25s, box-shadow .25s;
+      appearance: none;
+    }
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(45,106,224,.08);
+    }
+    .field input::placeholder,
+    .field textarea::placeholder { color: #b0bec5; }
+    .field textarea { resize: vertical; min-height: 110px; line-height: 1.7; }
+
+    .select-wrap { position: relative; }
+    .select-wrap::after {
+      content: '';
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8px;
+      height: 8px;
+      border-right: 1px solid var(--muted);
+      border-bottom: 1px solid var(--muted);
+      transform: translateY(-65%) rotate(45deg);
+      pointer-events: none;
+    }
+
+    /* ─── RADIO BUTTONS ─── */
+    .radio-group {
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .6rem 1.1rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: .82rem;
+      color: var(--muted);
+      border-radius: var(--radius);
+      transition: border-color .2s, background .2s, color .2s;
+      user-select: none;
+    }
+    .radio-label:hover { border-color: var(--gold); background: #eef3fb; }
+    .radio-label input[type="radio"] { display: none; }
+    .radio-dot {
+      width: 14px;
+      height: 14px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color .2s;
+      flex-shrink: 0;
+    }
+    .radio-dot::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .radio-label input:checked ~ .radio-dot { border-color: var(--gold); }
+    .radio-label input:checked ~ .radio-dot::after { opacity: 1; }
+    .radio-label input:checked ~ span:last-child { color: var(--gold-dk); font-weight: 500; }
+    .radio-label:has(input:checked) { border-color: var(--gold); background: #eef3fb; }
+
+    /* ─── SUBMIT BUTTON ─── */
+    .submit-area {
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .submit-note {
+      font-size: .75rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.8;
+    }
+    .submit-note a { color: var(--gold); text-decoration: none; }
+    .submit-note a:hover { text-decoration: underline; }
+
+    .btn-submit {
+      display: inline-flex;
+      align-items: center;
+      gap: .75rem;
+      padding: 1rem 2.8rem;
+      background: linear-gradient(135deg, var(--gold-dk), var(--gold));
+      color: #ffffff;
+      font-family: 'Jost', sans-serif;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: transform .3s, box-shadow .3s, opacity .3s;
+      box-shadow: 0 4px 20px rgba(45,106,224,.25);
+      width: 100%;
+      justify-content: center;
+    }
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px rgba(45,106,224,.4);
+    }
+    .btn-submit:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .btn-submit svg { transition: transform .3s; }
+    .btn-submit:hover svg { transform: translateX(3px); }
+
+    /* ─── SUCCESS STATE ─── */
+    #success-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26,39,68,.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 980;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    #success-overlay.show { display: flex; }
+
+    .success-card {
+      background: var(--black);
+      border: 1px solid var(--border);
+      max-width: 480px;
+      width: 100%;
+      padding: 4rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .success-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold-dk), var(--gold), var(--gold-lt));
+    }
+    .success-icon {
+      width: 60px;
+      height: 60px;
+      border: 1px solid rgba(45,106,224,.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 2rem;
+      color: var(--gold);
+      animation: successPop .4s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    @keyframes successPop {
+      from { transform: scale(0); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+    .success-card h2 {
+      font-size: 1.8rem;
+      margin-bottom: .75rem;
+    }
+    .success-card p {
+      font-size: .88rem;
+      color: var(--muted);
+      line-height: 1.85;
+      margin-bottom: 2.5rem;
+    }
+    .btn-back-home {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .8rem 2rem;
+      border: 1px solid var(--gold-dk);
+      color: var(--gold);
+      font-family: 'Jost', sans-serif;
+      font-size: .72rem;
+      font-weight: 500;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: var(--radius);
+      transition: background .3s;
+    }
+    .btn-back-home:hover { background: var(--gold-dk); color: #fff; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 0;
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      letter-spacing: .1em;
+      color: var(--white);
+    }
+    .footer-logo span { color: var(--gold); }
+    .footer-info { font-size: .72rem; color: var(--muted); letter-spacing: .05em; }
+    .footer-info a { color: var(--muted); text-decoration: none; transition: color .3s; }
+    .footer-info a:hover { color: var(--gold); }
+    .footer-copy { font-size: .65rem; color: #94a3b8; letter-spacing: .12em; text-transform: uppercase; }
+
+    /* ─── REVEAL ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .6s, transform .6s;
+    }
+    .reveal.in-view { opacity: 1; transform: none; }
+    .reveal-d1 { transition-delay: .1s; }
+    .reveal-d2 { transition-delay: .2s; }
+
+    /* ─── CHATBOT WIDGET ─── */
+    #chatbot-widget {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 950;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: .75rem;
+    }
+    #chat-trigger {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1a2744, #2d6ae0);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 24px rgba(45,106,224,.4);
+      transition: transform .3s, box-shadow .3s;
+      color: #ffffff;
+      flex-shrink: 0;
+    }
+    #chat-trigger:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 8px 32px rgba(45,106,224,.5); }
+    #chat-trigger .icon-chat { display: block; }
+    #chat-trigger .icon-close { display: none; }
+    #chat-trigger.open .icon-chat { display: none; }
+    #chat-trigger.open .icon-close { display: block; }
+    #chat-window {
+      width: 340px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 8px 48px rgba(26,39,68,.15);
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(12px) scale(.97);
+      pointer-events: none;
+      transition: opacity .3s, transform .3s;
+    }
+    #chat-window.open { opacity: 1; transform: none; pointer-events: auto; }
+    .chat-header {
+      background: linear-gradient(135deg, #1a2744 0%, #2a4080 100%);
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .chat-header-info { display: flex; align-items: center; gap: .75rem; }
+    .chat-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, #2d6ae0, #93b4f5);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: #fff; font-weight: 400; flex-shrink: 0;
+    }
+    .chat-name { font-size: .82rem; font-weight: 500; color: #fff; letter-spacing: .04em; }
+    .chat-status {
+      font-size: .63rem; color: rgba(255,255,255,.65); letter-spacing: .06em;
+      display: flex; align-items: center; gap: .35rem; margin-top: .15rem;
+    }
+    .chat-status::before { content: ''; display: block; width: 6px; height: 6px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
+    #chat-close { background: none; border: none; color: rgba(255,255,255,.6); cursor: pointer; font-size: .95rem; padding: .25rem; line-height: 1; transition: color .2s; }
+    #chat-close:hover { color: #fff; }
+    .chat-messages { padding: 1.25rem; max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: .75rem; flex-shrink: 0; }
+    .chat-messages::-webkit-scrollbar { width: 3px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 2px; }
+    .chat-msg { display: flex; flex-direction: column; max-width: 86%; }
+    .chat-msg.bot { align-self: flex-start; }
+    .chat-msg.user { align-self: flex-end; }
+    .chat-bubble { padding: .65rem 1rem; border-radius: 12px; font-size: .82rem; line-height: 1.65; }
+    .chat-msg.bot .chat-bubble { background: #f0f4f8; color: #1a1a2e; border-bottom-left-radius: 3px; }
+    .chat-msg.user .chat-bubble { background: linear-gradient(135deg, #1a2744, #2d6ae0); color: #fff; border-bottom-right-radius: 3px; }
+    .chat-typing { display: flex; gap: 5px; padding: .7rem 1rem; background: #f0f4f8; border-radius: 12px; border-bottom-left-radius: 3px; width: fit-content; align-self: flex-start; }
+    .chat-typing span { width: 6px; height: 6px; border-radius: 50%; background: #94a3b8; animation: typingDot .9s ease-in-out infinite; }
+    .chat-typing span:nth-child(2) { animation-delay: .18s; }
+    .chat-typing span:nth-child(3) { animation-delay: .36s; }
+    @keyframes typingDot { 0%,60%,100% { transform: translateY(0); opacity: .4; } 30% { transform: translateY(-5px); opacity: 1; } }
+    .chat-qa-area { border-top: 1px solid #f0f4f8; padding: .75rem 1rem 1rem; display: flex; flex-direction: column; gap: .45rem; flex-shrink: 0; }
+    .chat-qr-label { font-size: .62rem; letter-spacing: .14em; text-transform: uppercase; color: #94a3b8; margin-bottom: .15rem; }
+    .chat-qr-btn { width: 100%; text-align: left; padding: .58rem .85rem; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; color: #1a2744; font-family: 'Jost', sans-serif; font-size: .78rem; cursor: pointer; transition: background .2s, border-color .2s, color .2s; line-height: 1.4; }
+    .chat-qr-btn:hover { background: #f0f4f8; border-color: #2d6ae0; color: #2d6ae0; }
+    .chat-back-btn { margin: .5rem 1rem .9rem; padding: .5rem .85rem; border: 1px solid #e2e8f0; border-radius: 8px; background: none; color: #64748b; font-family: 'Jost', sans-serif; font-size: .75rem; cursor: pointer; transition: background .2s, color .2s; display: flex; align-items: center; gap: .4rem; flex-shrink: 0; }
+    .chat-back-btn:hover { background: #f0f4f8; color: #1a2744; }
+    .chat-form-btn { display: inline-flex; align-items: center; gap: .4rem; margin-top: .5rem; padding: .55rem .9rem; background: linear-gradient(135deg, #1a2744, #2d6ae0); color: #fff; font-family: 'Jost', sans-serif; font-size: .75rem; font-weight: 500; text-decoration: none; border-radius: 8px; transition: opacity .2s; width: fit-content; }
+    .chat-form-btn:hover { opacity: .88; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 960px) {
+      .form-layout { grid-template-columns: 1fr; gap: 3rem; }
+      .form-sidebar { position: static; }
+    }
+    @media (max-width: 768px) {
+      nav { display: none; }
+      .hamburger { display: flex; }
+      .field-row { grid-template-columns: 1fr; }
+      .service-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+      .form-card-inner { padding: 2rem 1.5rem; }
+    }
+    @media (max-width: 480px) {
+      #chatbot-widget { right: 1rem; bottom: 1rem; }
+      #chat-window { width: calc(100vw - 2rem); }
+      .success-card { padding: 3rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── HEADER ─── -->
+  <header id="header">
+    <div class="container">
+      <a href="index.html" class="logo">Val<span>link</span></a>
+      <nav>
+        <a href="index.html#services">サービス</a>
+        <a href="index.html#chatbot">チャットボット</a>
+        <a href="index.html#pricing">料金</a>
+        <a href="index.html#flow">制作の流れ</a>
+        <a href="contact.html" class="nav-cta active">お問い合わせ</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="メニュー">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ─── MOBILE NAV ─── -->
+  <div class="mobile-nav" id="mobileNav">
+    <a href="index.html#services" class="mob-link">サービス</a>
+    <a href="index.html#chatbot" class="mob-link">チャットボット</a>
+    <a href="index.html#maintenance" class="mob-link">保守管理</a>
+    <a href="index.html#pricing" class="mob-link">料金</a>
+    <a href="index.html#flow" class="mob-link">制作の流れ</a>
+    <a href="contact.html" class="mob-link">お問い合わせ</a>
+  </div>
+
+  <!-- ─── PAGE HERO ─── -->
+  <div class="page-hero">
+    <div class="page-hero-grid"></div>
+    <div class="container page-hero-content">
+      <span class="label reveal">Contact</span>
+      <span class="gold-line reveal reveal-d1"></span>
+      <h1 class="reveal reveal-d1">お問い合わせ</h1>
+      <p class="reveal reveal-d2">
+        ご興味のあるサービスをお選びいただくと、必要な項目だけ表示されます。
+        まずはお気軽にご相談ください。
+      </p>
+    </div>
+  </div>
+
+  <!-- ─── FORM SECTION ─── */
+  <section class="form-section">
+    <div class="container">
+      <div class="form-layout">
+
+        <!-- ─── MAIN FORM ─── -->
+        <div class="form-card reveal">
+          <div class="form-card-inner">
+            <form id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+
+              <!-- Web3Forms アクセスキー（YOUR_ACCESS_KEY_HEREを実際のキーに差し替えてください） -->
+              <input type="hidden" name="access_key" value="972bce01-60ea-41c1-b004-36244f0b6234">
+              <input type="hidden" name="subject" value="【Vallink】お問い合わせが届きました">
+              <input type="hidden" name="from_name" value="Vallink お問い合わせフォーム">
+              <input type="hidden" name="redirect" value="false">
+              <input type="hidden" name="hcaptcha" value="true">
+              <input type="checkbox" name="botcheck" style="display:none;">
+
+              <!-- ─── サービス選択 ─── -->
+              <div class="form-section-title">
+                <h3>サービス選択</h3>
+              </div>
+
+              <div class="service-grid">
+                <label class="service-check-label" id="label-lp">
+                  <input type="checkbox" name="service_lp" value="LP制作" id="check-lp">
+                  <span class="check-box">
+                    <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+                      <path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                  <span class="check-text">LP制作</span>
+                </label>
+
+                <label class="service-check-label" id="label-bot">
+                  <input type="checkbox" name="service_chatbot" value="チャットボット導入" id="check-bot">
+                  <span class="check-box">
+                    <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+                      <path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                  <span class="check-text">チャットボット導入</span>
+                </label>
+
+                <label class="service-check-label" id="label-maint">
+                  <input type="checkbox" name="service_maintenance" value="保守管理" id="check-maint">
+                  <span class="check-box">
+                    <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+                      <path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                  <span class="check-text">保守管理</span>
+                </label>
+
+                <label class="service-check-label" id="label-other">
+                  <input type="checkbox" name="service_other" value="その他・まずは相談したい" id="check-other">
+                  <span class="check-box">
+                    <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+                      <path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                  <span class="check-text">その他・まずは相談したい</span>
+                </label>
+              </div>
+
+              <!-- ─── LP制作 条件フィールド ─── -->
+              <div class="conditional-block" id="block-lp">
+                <div class="conditional-inner">
+                  <div class="conditional-header">
+                    <div class="conditional-icon">
+                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <rect x="2" y="3" width="14" height="10" rx="1" stroke="white" stroke-width="1.3"/>
+                        <path d="M2 6h14" stroke="white" stroke-width="1.3"/>
+                        <path d="M9 15v-2M6 15h6" stroke="white" stroke-width="1.3" stroke-linecap="round"/>
+                      </svg>
+                    </div>
+                    <h4>LP制作について</h4>
+                  </div>
+
+                  <div class="field-row">
+                    <div class="field">
+                      <label>業種・ジャンル <span class="req">必須</span></label>
+                      <input type="text" name="lp_industry" placeholder="例：飲食、美容、EC">
+                    </div>
+                    <div class="field">
+                      <label>ターゲット客層 <span class="req">必須</span></label>
+                      <input type="text" name="lp_target" placeholder="例：30代女性、地域の主婦">
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label>お店の雰囲気・こだわり <span class="opt">任意</span></label>
+                    <textarea name="lp_atmosphere" placeholder="例：カジュアルで入りやすい雰囲気、天然素材にこだわり"></textarea>
+                  </div>
+
+                  <div class="field">
+                    <label>写真・素材の有無 <span class="req">必須</span></label>
+                    <div class="radio-group">
+                      <label class="radio-label">
+                        <input type="radio" name="lp_assets" value="あり">
+                        <span class="radio-dot"></span>
+                        <span>あり</span>
+                      </label>
+                      <label class="radio-label">
+                        <input type="radio" name="lp_assets" value="なし">
+                        <span class="radio-dot"></span>
+                        <span>なし</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─── チャットボット 条件フィールド ─── -->
+              <div class="conditional-block" id="block-bot">
+                <div class="conditional-inner">
+                  <div class="conditional-header">
+                    <div class="conditional-icon">
+                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <rect x="2" y="3" width="9" height="7" rx="1" stroke="white" stroke-width="1.3"/>
+                        <path d="M2 5.5h9" stroke="white" stroke-width="1.3"/>
+                        <path d="M11 6h5v5h-5" stroke="white" stroke-width="1.3"/>
+                        <path d="M6 12l-2.5 3h5l-2.5-3z" stroke="white" stroke-width="1.2" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    <h4>チャットボット導入について</h4>
+                  </div>
+
+                  <div class="field">
+                    <label>自動化したい対応内容 <span class="req">必須</span></label>
+                    <textarea name="bot_content" placeholder="例：予約受付、よくある質問への回答、メニュー案内"></textarea>
+                  </div>
+
+                  <div class="field">
+                    <label>設置するサイトのURL <span class="opt">任意</span></label>
+                    <input type="url" name="bot_url" placeholder="https://example.com">
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─── 保守管理 条件フィールド ─── -->
+              <div class="conditional-block" id="block-maint">
+                <div class="conditional-inner">
+                  <div class="conditional-header">
+                    <div class="conditional-icon">
+                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <path d="M9 2l1 3.5h3.5l-2.8 2 1 3.5L9 9l-2.7 2 1-3.5L4.5 5.5H8z" stroke="white" stroke-width="1.2" stroke-linejoin="round"/>
+                        <circle cx="9" cy="13.5" r="3" stroke="white" stroke-width="1.2"/>
+                        <path d="M9 12v1.5l1 .8" stroke="white" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    <h4>保守管理について</h4>
+                  </div>
+
+                  <div class="field">
+                    <label>現在のサイトURL <span class="req">必須</span></label>
+                    <input type="url" name="maint_url" placeholder="https://example.com">
+                  </div>
+
+                  <div class="field">
+                    <label>どんな更新が必要か <span class="req">必須</span></label>
+                    <textarea name="maint_needs" placeholder="例：メニューの価格更新、ページ追加、セキュリティ対応"></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─── 基本情報 ─── -->
+              <div class="form-section-title">
+                <h3>基本情報</h3>
+              </div>
+
+              <div class="field-row">
+                <div class="field">
+                  <label>お名前 <span class="req">必須</span></label>
+                  <input type="text" name="name" placeholder="山田 太郎" required>
+                </div>
+                <div class="field">
+                  <label>会社名・お店の名前 <span class="req">必須</span></label>
+                  <input type="text" name="company" placeholder="株式会社〇〇 / 〇〇カフェ" required>
+                </div>
+              </div>
+
+              <div class="field-row">
+                <div class="field">
+                  <label>メールアドレス <span class="req">必須</span></label>
+                  <input type="email" name="email" placeholder="info@example.com" required>
+                </div>
+                <div class="field">
+                  <label>電話番号 <span class="req">必須</span></label>
+                  <input type="tel" name="phone" placeholder="090-0000-0000" required>
+                </div>
+              </div>
+
+              <!-- ─── ご要望 ─── -->
+              <div class="form-section-title">
+                <h3>ご要望・その他</h3>
+              </div>
+
+              <div class="field">
+                <label>ご要望・気になることなど <span class="opt">任意</span></label>
+                <textarea name="message" rows="5" placeholder="予算感、スケジュール、その他お気軽にご記入ください"></textarea>
+              </div>
+
+              <!-- ─── 送信 ─── -->
+              <div class="submit-area">
+                <p class="submit-note">
+                  送信いただいた内容は<a href="privacy.html">プライバシーポリシー</a>に従って取り扱います。
+                  通常2営業日以内にご返信いたします。
+                </p>
+                <button type="submit" class="btn-submit" id="submitBtn">
+                  送信する
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+        <!-- ─── SIDEBAR ─── -->
+        <aside class="form-sidebar reveal reveal-d1">
+          <div class="sidebar-block">
+            <span class="label">Response</span>
+            <span class="gold-line"></span>
+            <h3>返信について</h3>
+            <p>
+              通常2営業日以内にメールにてご返信いたします。
+              お急ぎの場合はお電話またはメールでお気軽にご連絡ください。
+            </p>
+            <div class="sidebar-contact-item">
+              <div class="sidebar-icon">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M2 3h10v8H2zM2 3l5 5 5-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <a href="mailto:vallink.official@gmail.com">vallink.official@gmail.com</a>
+            </div>
+          </div>
+
+          <div class="sidebar-block">
+            <span class="label">Process</span>
+            <span class="gold-line"></span>
+            <h3>ご依頼の流れ</h3>
+            <p style="margin-bottom: 1.25rem;">
+              フォーム送信後、内容を確認してご連絡いたします。
+            </p>
+            <div style="display:flex;flex-direction:column;gap:.75rem;">
+              <div style="display:flex;align-items:center;gap:.75rem;font-size:.8rem;color:var(--muted);">
+                <span style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold-lt);line-height:1;min-width:1.5rem;">1</span>
+                フォーム送信
+              </div>
+              <div style="display:flex;align-items:center;gap:.75rem;font-size:.8rem;color:var(--muted);">
+                <span style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold-lt);line-height:1;min-width:1.5rem;">2</span>
+                ヒアリング・お見積り
+              </div>
+              <div style="display:flex;align-items:center;gap:.75rem;font-size:.8rem;color:var(--muted);">
+                <span style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold-lt);line-height:1;min-width:1.5rem;">3</span>
+                制作・導入開始
+              </div>
+              <div style="display:flex;align-items:center;gap:.75rem;font-size:.8rem;color:var(--muted);">
+                <span style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold-lt);line-height:1;min-width:1.5rem;">4</span>
+                納品・公開
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-block">
+            <span class="label">Representative</span>
+            <span class="gold-line"></span>
+            <h3>担当者</h3>
+            <p>代表 村瀬 凌太</p>
+            <p style="margin-top:.5rem;font-size:.78rem;">
+              一つひとつのご相談に丁寧に対応いたします。
+              小さなご質問もお気軽にどうぞ。
+            </p>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SUCCESS OVERLAY ─── -->
+  <div id="success-overlay">
+    <div class="success-card">
+      <div class="success-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <path d="M5 14l6 6L23 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h2>お問い合わせ<br>ありがとうございます</h2>
+      <p>
+        内容を確認のうえ、通常2営業日以内にメールにてご返信いたします。<br>
+        しばらくお待ちください。
+      </p>
+      <a href="index.html" class="btn-back-home">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <path d="M7 2L3 6l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        トップページへ戻る
+      </a>
+    </div>
+  </div>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">Val<span>link</span> <span style="color:var(--border);margin:0 .5rem;">|</span> <span style="font-size:.8rem;color:var(--muted);font-family:'Jost',sans-serif;letter-spacing:.05em;">バルリンク</span></div>
+        <div class="footer-info">
+          代表：村瀬 凌太 &nbsp;|&nbsp;
+          <a href="mailto:vallink.official@gmail.com">vallink.official@gmail.com</a>
+        </div>
+        <div class="footer-copy">
+          <a href="privacy.html" style="color:inherit;text-decoration:none;margin-right:1.5rem;transition:color .3s;" onmouseover="this.style.color='#2d6ae0'" onmouseout="this.style.color='inherit'">プライバシーポリシー</a>
+          &copy; 2024 Vallink. All rights reserved.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ─── チャットボットウィジェット ─── -->
+  <div id="chatbot-widget">
+    <div id="chat-window" role="dialog" aria-label="Vallinkサポートチャット">
+      <div class="chat-header">
+        <div class="chat-header-info">
+          <div class="chat-avatar">V</div>
+          <div>
+            <div class="chat-name">Vallink サポート</div>
+            <div class="chat-status">オンライン</div>
+          </div>
+        </div>
+        <button id="chat-close" aria-label="閉じる">✕</button>
+      </div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <div id="chat-qa-area"></div>
+    </div>
+    <button id="chat-trigger" aria-label="チャットを開く">
+      <svg class="icon-chat" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <svg class="icon-close" width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <script>
+    // ─── Header scroll ───
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    // ─── Hamburger ───
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileNav.classList.toggle('open');
+    });
+    document.querySelectorAll('.mob-link').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        mobileNav.classList.remove('open');
+      });
+    });
+
+    // ─── Reveal ───
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in-view');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(el => observer.observe(el));
+
+    // ─── サービス選択 → 条件フィールドの表示切替 ───
+    const checkMap = [
+      { checkbox: document.getElementById('check-lp'),    block: document.getElementById('block-lp'),    label: document.getElementById('label-lp') },
+      { checkbox: document.getElementById('check-bot'),   block: document.getElementById('block-bot'),   label: document.getElementById('label-bot') },
+      { checkbox: document.getElementById('check-maint'), block: document.getElementById('block-maint'), label: document.getElementById('label-maint') },
+    ];
+
+    checkMap.forEach(({ checkbox, block, label }) => {
+      checkbox.addEventListener('change', () => {
+        block.classList.toggle('visible', checkbox.checked);
+        label.classList.toggle('selected', checkbox.checked);
+      });
+    });
+
+    // その他チェックボックスのラベル更新のみ（専用フィールドなし）
+    const checkOther = document.getElementById('check-other');
+    const labelOther = document.getElementById('label-other');
+    checkOther.addEventListener('change', () => {
+      labelOther.classList.toggle('selected', checkOther.checked);
+    });
+
+    // ─── フォーム送信（Web3Forms AJAX） ───
+    const form = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const successOverlay = document.getElementById('success-overlay');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = '送信中...';
+
+      const data = new FormData(form);
+
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          body: data,
+        });
+        const json = await res.json();
+
+        if (json.success) {
+          successOverlay.classList.add('show');
+          document.body.style.overflow = 'hidden';
+        } else {
+          alert('送信に失敗しました。お手数ですが、メールにてお問い合わせください。');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '送信する <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        }
+      } catch {
+        alert('通信エラーが発生しました。しばらく経ってから再度お試しください。');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '送信する <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      }
+    });
+
+    // ─── チャットボット ───
+    const QA = [
+      { q: 'サービスについて教えてください', a: 'LP制作・チャットボット導入・保守管理を行っています。' },
+      { q: '料金はいくらですか？', a: 'LP制作は30,000円（税込）です。チャットボット導入・保守管理は別途お見積もりします。' },
+      { q: '納期はどのくらいですか？', a: '作業開始後、営業日5日以内でお届けします。' },
+      { q: '修正は何回できますか？', a: '3回まで無料です。4回目以降は1回5,000円になります。' },
+      { q: 'まずどうすればいいですか？', a: 'このページのフォームからお気軽にご連絡ください。' }
+    ];
+
+    const trigger   = document.getElementById('chat-trigger');
+    const chatWin   = document.getElementById('chat-window');
+    const closeBtn  = document.getElementById('chat-close');
+    const msgArea   = document.getElementById('chat-messages');
+    const qaArea    = document.getElementById('chat-qa-area');
+    let isOpen = false, initialized = false;
+
+    function toggleChat() {
+      isOpen = !isOpen;
+      chatWin.classList.toggle('open', isOpen);
+      trigger.classList.toggle('open', isOpen);
+      trigger.setAttribute('aria-label', isOpen ? 'チャットを閉じる' : 'チャットを開く');
+      if (isOpen && !initialized) { initialized = true; initChat(); }
+    }
+    trigger.addEventListener('click', toggleChat);
+    closeBtn.addEventListener('click', toggleChat);
+
+    function addMsg(text, type, extra) {
+      const wrap = document.createElement('div');
+      wrap.className = 'chat-msg ' + type;
+      const bubble = document.createElement('div');
+      bubble.className = 'chat-bubble';
+      bubble.textContent = text;
+      wrap.appendChild(bubble);
+      if (extra && extra.link) {
+        const a = document.createElement('a');
+        a.className = 'chat-form-btn';
+        a.href = extra.link.url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.innerHTML = extra.link.text + ' <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        wrap.appendChild(a);
+      }
+      msgArea.appendChild(wrap);
+      msgArea.scrollTop = msgArea.scrollHeight;
+    }
+
+    function botReply(text, delay, extra) {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          const typing = document.createElement('div');
+          typing.className = 'chat-typing';
+          typing.innerHTML = '<span></span><span></span><span></span>';
+          msgArea.appendChild(typing);
+          msgArea.scrollTop = msgArea.scrollHeight;
+          setTimeout(() => {
+            typing.remove();
+            addMsg(text, 'bot', extra);
+            resolve();
+          }, 800);
+        }, delay);
+      });
+    }
+
+    function showQuickReplies() {
+      qaArea.innerHTML = '';
+      const area = document.createElement('div');
+      area.className = 'chat-qa-area';
+      const label = document.createElement('div');
+      label.className = 'chat-qr-label';
+      label.textContent = 'よくある質問';
+      area.appendChild(label);
+      QA.forEach(item => {
+        const btn = document.createElement('button');
+        btn.className = 'chat-qr-btn';
+        btn.textContent = item.q;
+        btn.addEventListener('click', () => onSelect(item));
+        area.appendChild(btn);
+      });
+      qaArea.appendChild(area);
+    }
+
+    async function onSelect(item) {
+      qaArea.innerHTML = '';
+      addMsg(item.q, 'user');
+      await botReply(item.a, 300, item.link ? { link: item.link } : null);
+      showBackBtn();
+    }
+
+    function showBackBtn() {
+      qaArea.innerHTML = '';
+      const btn = document.createElement('button');
+      btn.className = 'chat-back-btn';
+      btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M7 2L3 6l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 別の質問をする';
+      btn.addEventListener('click', () => { qaArea.innerHTML = ''; showQuickReplies(); });
+      qaArea.appendChild(btn);
+    }
+
+    async function initChat() {
+      await botReply('こんにちは！バルリンクです。\nお気軽にご質問ください。', 200);
+      showQuickReplies();
+    }
+  </script>
+</body>
+</html>
